@@ -1,0 +1,10 @@
+<!DOCTYPE html><html><head><script src="/socket.io/socket.io.js"></script><script src="http://code.jquery.com/jquery-1.10.2.min.js"></script><script>var socket = io.connect('http://localhost:3000');
+
+$(function() {
+    $("#send_text").on("click", function(event) {
+        event.preventDefault();
+        socket.emit("send", {
+            message: $("#message").val();
+        });
+    });
+});</script></head><body><p id="text_instructions">Enter your message:</p><div id="text"><form><textarea name="message"></textarea><input type="submit" value="Send" id="send_text"></form></div></body></html>

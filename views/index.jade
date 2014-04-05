@@ -2,14 +2,17 @@ doctype
 html
     head
         script(src="/socket.io/socket.io.js")
-        script(src="http://code.jquery.com/jquery-1.10.2.min.js")
-                
+        script(src="http://code.jquery.com/jquery-1.10.2.min.js")        
+        script(src="/scripts/jquery.inputmask.js")
+
         script.
     
             var socket = io.connect('http://localhost:3000');
 
             $(function() {
-
+                
+                $("#phone_number").inputmask("mask", {"mask": "(999) 999-9999", "placeholder": " "});
+                $("#code").inputmask("mask", {"mask": "999999", "placeholder": " "});
 
                 $("#register_button").on("click", function(event) {
                 event.preventDefault();
@@ -27,11 +30,12 @@ html
                 });
 
                 socket.on("code_generated", function(data) {
-                $("#register").fadeOut();
+                $("#register,#register_instructions,#update").fadeOut(function(){
+                $("#verify_instructions").fadeIn(); 
                 $("#verify").fadeIn();
-                $("#update").fadeOut();
-                $("#register_instructions").fadeOut();
-                $("#verify_instructions").fadeIn();
+                });
+                //$("#register_instructions").fadeOut();
+                //$("#update").fadeOut();
                 });
 
                 socket.on("update", function(data) {
@@ -40,11 +44,11 @@ html
                 });
 
                 socket.on("reset", function(data) {
-                $("#register_instructions").fadeIn();
                 $("#verify_instructions").fadeOut();
                 $("#update").fadeOut();
-                $("#register").fadeIn();
                 $("#verify").fadeOut();
+                $("#register_instructions").fadeIn();
+                $("#register").fadeIn();
                 });
 
                 socket.on("verified", function(data) {
@@ -56,12 +60,13 @@ html
             });
     body
         strong#update(style="display: none")
-        p#register_instructions Enter your phone number:
-        p#verify_instructions(style="display: none") Enter your verification code:
+        p#register_instructions To receive text messages from Upward Sports @ Severns Valley enter your phone number below.  You will receive a confirmation code.
+        p#verify_instructions(style="display: none") Please enter your confirmation code.
         div#register
             form
-                input(type="text")#phone_number
+                input(type="text", class="required phone")#phone_number
                 input(type="submit", value="Register")#register_button
+                input(type="hidden", value="")#txtHiddenPhoneNumber
         div#verify(style="display: none")
             form
                 input(type="text")#code
