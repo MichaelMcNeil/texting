@@ -1,0 +1,13 @@
+{
+  "name": "texting",
+  "description": "phone number validation and texting",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "express": "3.5.1",
+    "jade": "1.3.1",
+    "mongojs": "0.11.0",
+    "socket.io": "0.9.16",
+    "twilio": "1.6"
+  }
+}

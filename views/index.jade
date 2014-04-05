@@ -29,8 +29,15 @@ html
                 });
                 });
 
+                $("#unsubscribe_button").on("click", function(event){
+                  event.preventDefault();
+                  socket.emit("unsubscribe", {
+                    phone_number: $("#phone_number").val()
+                  });
+                });
+
                 socket.on("code_generated", function(data) {
-                $("#register,#register_instructions,#update").fadeOut(function(){
+                $("#register,#register_instructions,#update,#unsubscribe_button").fadeOut(function(){
                 $("#verify_instructions").fadeIn(); 
                 $("#verify").fadeIn();
                 });
@@ -41,12 +48,14 @@ html
                 socket.on("update", function(data) {
                 $("#update").html(data.message);
                 $("#update").fadeIn();
+                if(data.verified=="true"){$("#unsubscribe_button").fadeIn();}
                 });
 
                 socket.on("reset", function(data) {
                 $("#verify_instructions").fadeOut();
                 $("#update").fadeOut();
                 $("#verify").fadeOut();
+                $("#unsubscribe_button").fadeOut();
                 $("#register_instructions").fadeIn();
                 $("#register").fadeIn();
                 });
@@ -60,6 +69,8 @@ html
             });
     body
         strong#update(style="display: none")
+        form
+          input(type="submit", value="Unsubscribe" style="display:none")#unsubscribe_button
         p#register_instructions To receive text messages from Upward Sports @ Severns Valley enter your phone number below.  You will receive a confirmation code.
         p#verify_instructions(style="display: none") Please enter your confirmation code.
         div#register
